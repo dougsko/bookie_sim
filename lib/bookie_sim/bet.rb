@@ -15,21 +15,26 @@ module BookieSim
 
         def calculate_payout
             if @team == @match.home_team
-                odds = @match.home_odds
+                if client.is_bookie
+                    odds = @match.online_home_odds
+                else
+                    odds = @match.home_odds
+                end
             else
-                odds = @match.away_odds
+                if client.is_bookie
+                    odds = @match.online_away_odds
+                else
+                    odds = @match.away_odds
+                end
             end
+            puts "Using odds: " + odds.to_s
 
             if odds > 0
                 profit = @stake * (odds.abs / 100.0)
-                #puts "profit = " + profit.round(2).to_s
             else
                 profit = @stake / (odds.abs / 100.0)
-                #puts "profit = " + profit.round(2).to_s
             end
-            #payout = @stake + profit.round(2)
             return profit.round(2)
-            return payout
         end
 
     end
